@@ -20,7 +20,6 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <GestureHandlerRootView>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -57,6 +56,5 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-    </GestureHandlerRootView>
   );
 }

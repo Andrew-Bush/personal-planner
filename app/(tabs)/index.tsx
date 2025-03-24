@@ -1,20 +1,43 @@
 import { Alert, FlatList, StyleSheet } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { Button, Card, TextInput } from 'react-native-paper';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+// import{ Swipeable} from 'react-native-gesture-handler';
+import Reanimated, {
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 
-// TODO: Verify data can be written to local storage
-// TODO: Verify data can be read from local storage
+const RightActionComponent = ({ progress, dragX }) => {
+  const animatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ translateX: dragX.value + 45 }],
+    };
+  });
+  return (
+    <Reanimated.View style={[animatedStyle, styles.rightAction]}>
+      <Text style={styles.actionText}>Delete</Text>
+    </Reanimated.View>
+  );
+};
+
+interface Task {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+
 export default function TabOneScreen() {
   const [task, setTask] = useState("");
-  const [tasks, setTasks] = useState<string[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const storeData = async (value: string[]) => {
+  const storeData = async (value: Task[]) => {
     try {
       const jsonValue = JSON.stringify(value)
       await AsyncStorage.setItem("user-tasks", jsonValue)
@@ -39,33 +62,45 @@ export default function TabOneScreen() {
 
   const AddTask = () => {
     if (task) {
-      setTasks([...tasks, task])
-      storeData([...tasks, task])
+      const newTask: Task = {
+        id: Date.now().toString(),
+        title: task,
+        completed: false
+      }
+      const newTasks = [...tasks, newTask]
+      setTasks(newTasks)
+      storeData(newTasks)
+      // setTask(""); // reset the input after adding
     }
   }
 
-  const RemoveTask = (index: number, direction: string) => {
-    console.log(direction, typeof(direction))
-    if(direction === 'right') {
-      const updatedTasks = [...tasks];
-      updatedTasks.splice(index, 1)
-      setTasks(updatedTasks);
-      storeData(updatedTasks);
-    }
+  const RemoveTask = (index: number) => {
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks);
+    storeData(updatedTasks);
   }
 
-  const renderTask = (singleTask: string, taskIndex: number) => (
-    <Swipeable onSwipeableOpen={(direction) => {
-      RemoveTask(taskIndex, direction);
-    }}>
+  const handleSwipeOpen = (taskIndex: number, direction: string | null) => {
+    console.log("direction: ", direction)
+    if (direction === 'left') {
+      RemoveTask(taskIndex);
+    }
+  };
 
-    <Card style={{ width: "80%", marginVertical: 10, backgroundColor:  "black", marginHorizontal: "auto"}} mode='outlined'>
-      <Card.Content>
-        <Text>{singleTask}</Text>
-      </Card.Content>
-    </Card>
+  const renderTask = (singleTask: Task, taskIndex: number) => (
+    <Swipeable
+      overshootRight={false}
+      onSwipeableOpen={(direction) => handleSwipeOpen(taskIndex, direction)}
+      renderRightActions={(progress, dragX) => (
+        <RightActionComponent progress={progress} dragX={dragX} />
+      )}
+    >
+      <Card style={styles.card} mode='outlined'>
+        <Card.Content>
+          <Text>{singleTask.title}</Text>
+        </Card.Content>
+      </Card>
     </Swipeable>
-
   )
 
   useEffect(() => {
@@ -89,12 +124,13 @@ export default function TabOneScreen() {
           color: "white"
         }}
       />
-      <Button mode='contained' onPress={() => AddTask()} style={{marginVertical: 10}}>
+      <Button mode='contained' onPress={() => AddTask()} style={styles.button}>
         <Text>Add Task</Text>
       </Button>
       <FlatList
         data={tasks}
-        renderItem={item => renderTask(item.item, item.index)}
+        keyExtractor={(item, index) => item.id}
+        renderItem={({item, index}) => renderTask(item, index)}
         style={{flex: 1, width: "100%"}}
       />
     </View>
@@ -115,5 +151,25 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  rightAction: {
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    borderRadius: 10,
+  },
+  actionText: {
+    color: 'white',
+  },
+  button: {
+    marginVertical: 10,
+  },
+  card: {
+    width: "80%",
+    marginVertical: 10,
+    backgroundColor:  "black",
+    marginHorizontal: "auto"
   },
 });
