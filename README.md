@@ -12,14 +12,10 @@ Before running this project, make sure you have the following installed:
 ## Installation
 
 1. Clone the repository:
-```bash
-git clone <your-repository-url>
-cd personal-planner
-```
 
 2. Install dependencies:
 ```bash
-yarn install
+yarn
 ```
 
 ## Running the Application
@@ -55,25 +51,15 @@ yarn test
 
 ## Technologies Used
 
-- React Native (0.76.7)
-- Expo (52.0.37)
+- React Native
+- Expo
 - React Navigation
 - React Native Paper
 - TypeScript
-- Jest for testing
+- Jest
 
 ## Features
 
-[Add your project's key features here]
+- Todo List
 
-## Project Structure
 
-[Add your project's structure here]
-
-## Contributing
-
-[Add contribution guidelines if applicable]
-
-## License
-
-[Add your license information here]

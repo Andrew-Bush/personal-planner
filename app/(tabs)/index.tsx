@@ -111,18 +111,15 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Schedule</Text>
       <TextInput
+        multiline={true}
+        numberOfLines={4}
         mode="outlined"
         label="Task"
         value={task}
         onChangeText={text => setTask(text)}
-        style={{
-          backgroundColor: "black",
-          flexDirection: "column",
-          width: "80%"
-        }}
-        contentStyle={{
-          color: "white"
-        }}
+        style={styles.textInput}
+        contentStyle={styles.textInputContent}
+        activeOutlineColor="white"
       />
       <Button mode='contained' onPress={() => AddTask()} style={styles.button}>
         <Text>Add Task</Text>
@@ -131,7 +128,7 @@ export default function TabOneScreen() {
         data={tasks}
         keyExtractor={(item, index) => item.id}
         renderItem={({item, index}) => renderTask(item, index)}
-        style={{flex: 1, width: "100%"}}
+        style={styles.flatList}
       />
     </View>
   );
@@ -172,4 +169,18 @@ const styles = StyleSheet.create({
     backgroundColor:  "black",
     marginHorizontal: "auto"
   },
+  flatList: {
+    width: "100%",
+    marginVertical: 10,
+    backgroundColor:  "black",
+    marginHorizontal: "auto"
+  },
+  textInput: {
+    width: "80%",
+    marginVertical: 10,
+    backgroundColor:  "black",
+  },
+  textInputContent: {
+    color: "white",
+  }
 });
