@@ -5,9 +5,7 @@ import { Button, Card, TextInput } from 'react-native-paper';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-// import{ Swipeable} from 'react-native-gesture-handler';
 import Reanimated, {
-  SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
@@ -41,7 +39,6 @@ export default function TabOneScreen() {
     try {
       const jsonValue = JSON.stringify(value)
       await AsyncStorage.setItem("user-tasks", jsonValue)
-      console.log("store data: ", value)
     } catch (e) {
       Alert.alert("couldn't save to storage")
     }
@@ -50,7 +47,6 @@ export default function TabOneScreen() {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("user-tasks");
-      console.log(jsonValue)
       const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : [];
       setTasks(parsedValue);
       return parsedValue;
@@ -70,7 +66,7 @@ export default function TabOneScreen() {
       const newTasks = [...tasks, newTask]
       setTasks(newTasks)
       storeData(newTasks)
-      // setTask(""); // reset the input after adding
+      setTask("");
     }
   }
 
@@ -81,7 +77,6 @@ export default function TabOneScreen() {
   }
 
   const handleSwipeOpen = (taskIndex: number, direction: string | null) => {
-    console.log("direction: ", direction)
     if (direction === 'left') {
       RemoveTask(taskIndex);
     }
