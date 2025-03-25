@@ -1,10 +1,10 @@
 import { FlatList, StyleSheet } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
-import { Card } from 'react-native-paper';
+import { View } from '@/components/Themed';
+import { Text, Card, Divider, IconButton, TouchableRipple, List } from 'react-native-paper';
 import { useEffect, useState } from 'react';
-import { styles } from './styles';
+import { styles } from '../../components/styles';
 export default function TabTwoScreen() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,6 +17,14 @@ export default function TabTwoScreen() {
     ){
       id
       name
+      pokemon_v2_pokemoncolor {
+        name
+      }
+      pokemon_v2_evolutionchain {
+        pokemon_v2_pokemonspecies(order_by: {id: asc}) {
+          name
+        }
+      }
     }
   }`;
 
@@ -50,11 +58,13 @@ export default function TabTwoScreen() {
   }, []);
 
   const renderCard = (item: any) => {
-    console.log(item, "item")
     return (
       <Card style={styles.card} mode='outlined'>
         <Card.Content>
-          <Text>{item.name}</Text>
+          <List.Accordion id={item.id.toString()} title={item.name} expanded={true}>
+            <Text variant='bodyMedium'>{`Color: ${item.pokemon_v2_pokemoncolor.name}`}</Text>
+            <Text variant='bodyMedium'>{`Evolutions: ${item.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.map((pokemon: any) => pokemon.name).join(', ')}`}</Text>
+          </List.Accordion>
         </Card.Content>
       </Card>
     )
@@ -62,12 +72,14 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        style={styles.flatList}
-        data={data?.data?.pokemon}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => renderCard(item)}
-      />
+      <List.AccordionGroup>
+        <FlatList
+          style={styles.flatList}
+          data={data?.data?.pokemon}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => renderCard(item)}
+        />
+      </List.AccordionGroup>
     </View>
   );
 }
