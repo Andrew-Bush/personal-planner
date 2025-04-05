@@ -4,14 +4,21 @@
     "strict": true,
     "paths": {
       "@/*": [
-        "./*"
+        "./*",
+        "./generated/*"
       ]
     }
   },
+  "exclude": [
+    "**/*.gql",
+    "**/*.graphql",
+    "generated/**/*.ts"
+  ],
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "graphql/queries.ts"
   ]
 }

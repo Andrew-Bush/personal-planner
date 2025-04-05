@@ -9,7 +9,9 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "android-preview": "eas build -p android --profile preview",
-    "eas:update": "eas update --channel preview"
+    "eas:update": "eas update --channel preview",
+    "codegen": "graphql-codegen",
+    "codegen:debug": "graphql-codegen --debug --verbose"
   },
   "jest": {
     "preset": "jest-expo"
@@ -27,6 +29,8 @@
     "expo-system-ui": "~4.0.8",
     "expo-updates": "~0.27.4",
     "expo-web-browser": "~14.0.2",
+    "fuse.js": "^7.1.0",
+    "graphql": "^16.10.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.7",
@@ -38,7 +42,11 @@
     "react-native-web": "~0.19.13"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.12.16",
     "@babel/core": "^7.25.2",
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@parcel/watcher": "^2.5.1",
     "@types/react": "~18.3.12",
     "jest": "^29.2.1",
     "jest-expo": "~52.0.6",
