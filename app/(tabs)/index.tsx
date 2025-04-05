@@ -86,14 +86,12 @@ export default function TabOneScreen() {
   };
 
   const editTask = (taskIndex: number, newTitle: string) => {
-    console.log("editing task", taskIndex, newTitle);
     setIsEditingTask(true);
     setEditingTask(tasks[taskIndex]);
     setEditingText(newTitle);
   }
 
   const handleEditTask = (taskIndex: number, newTitle: string) => {
-    console.log("handled", taskIndex, newTitle);
     const updatedTasks = tasks.map((task, index) => index === taskIndex ? { ...task, title: newTitle } : task);
     setTasks(updatedTasks);
     storeData(updatedTasks);
